@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} ALS mortality predictor v0.1 {% endblock %}</h1>
+    <br>
+    Leave blank for variables which are unknown/not measured. This current iteration predicts the probability of a person living with ALS being a fast progressor (defined as ALSFRS-R decline of at least 1.5 points per month).
+     Use only float (i.e. numbers, decimals accepted) for freetext sections. Leave blank if a variable is not known/tested.
+    <br>
+    {% if validation == True %}
+    <br> The probability of being a fast progressor is {{result}}. <br>
+    {% endif %}
+    {% if validation == False %}
+    <br> Error! All freetext inputs must be float and the radio buttons have to be filled up <br><br>
+    {% endif %}
+    <br>
+    <form method="post" action="{{ url_for('result')}}" id="als_calc">
+        <label for="Onset">Date of onset:</label>
+        <input type='date' name="Onset" id="Onset">
+        <br>
+        <label for="Diagnosis">Date of diagnosis:</label>
+        <input type='date' name="Diagnosis" id="Diagnosis">
+        <br>
+        <label for="Birthday">Birthday:</label>
+        <input type='date' name="Birthday" id="Birthday">
+        <br>
+        <label for="Gender">Gender:</label>
+        <input type="radio" id="Male" name="Gender" value="1">
+        <label for="Male">Male</label>
+        <input type="radio" id="Female" name="Gender" value="0" checked="checked">
+        <label for="Female">Female</label>
+        <br>
+        <label for="Bulbar">Bulbar involvement:</label>
+        <input type="radio" id="Yes" name="Bulbar" value="1">
+        <label for="Yes">Yes</label>
+        <input type="radio" id="No" name="Bulbar" value="0" checked="checked">
+        <label for="No">No</label>
+        <br>
+        <label for="Limb">Limb involvement:</label>
+        <input type="radio" id="Yes" name="Limb" value="1">
+        <label for="Yes">Yes</label>
+        <input type="radio" id="No" name="Limb" value="0" checked="checked">
+        <label for="No">No</label>
+        <br>
+        <label for="Riluzole">Riluzole use:</label>
+        <input type="radio" id="Yes" name="Riluzole" value="1">
+        <label for="Yes">Yes</label>
+        <input type="radio" id="No" name="Riluzole" value="0" checked="checked">
+        <label for="No">No</label>
+        <br>
+        <label for="Bmi">BMI:</label>
+        <input type='text' name="Bmi" id="Bmi">
+        <br>
+        <label for="Pulse">Pulse:</label>
+        <input type='text' name="Pulse" id="Pulse">
+        <br>
+        <label for="Rr">Respiratory rate:</label>
+        <input type='text' name="Rr" id="Rr">
+        <br>
+        <label for="Sbp">Systolic BP:</label>
+        <input type='text' name="Sbp" id="Sbp">
+        <br>
+        <label for="Dbp">Diastolic BP:</label>
+        <input type='text' name="Dbp" id="Dbp">
+        <br>
+        <label for="Fvc">Forced vital capacity over predicted:</label>
+        <input type='text' name="Fvc" id="Fvc">
+        <br>
+        <label for="Alt">ALT:</label>
+        <input type='text' name="Alt" id="Alt">
+        <br>
+        <label for="Ast">AST:</label>
+        <input type='text' name="Ast" id="Ast">
+        <br>
+        <label for="Alp">ALP:</label>
+        <input type='text' name="Alp" id="Alp">
+        <br>
+        <label for="Ggt">GGT:</label>
+        <input type='text' name="Ggt" id="Ggt">
+        <br>
+        <label for="Tbil">Total bilirubin:</label>
+        <input type='text' name="Tbil" id="Tbil">
+        <br>
+        <label for="Alb">Albumin:</label>
+        <input type='text' name="Alb" id="Alb">
+        <br>
+        <label for="Protein">Protein:</label>
+        <input type='text' name="Protein" id="Protein">
+        <br>
+        <label for="Bun">BUN/Urea:</label>
+        <input type='text' name="Bun" id="Bun">
+        <br>
+        <label for="Cr">Creatinine:</label>
+        <input type='text' name="Cr" id="Cr">
+        <br>
+        <label for="Sodium">Sodium:</label>
+        <input type='text' name="Sodium" id="Sodium">
+        <br>
+        <label for="Potassium">Potassium:</label>
+        <input type='text' name="Potassium" id="Potassium">
+        <br>
+        <label for="Chloride">Chloride:</label>
+        <input type='text' name="Chloride" id="Chloride">
+        <br>
+        <label for="Glucose">Glucose:</label>
+        <input type='text' name="Glucose" id="Glucose">
+        <br>
+        <label for="Bicarbonate">Bicarbonate:</label>
+        <input type='text' name="Bicarbonate" id="Bicarbonate">
+        <br>
+        <label for="Calcium">Calcium:</label>
+        <input type='text' name="Calcium" id="Calcium">
+        <br>
+        <label for="Phosphorus">Phosphorus:</label>
+        <input type='text' name="Phosphorus" id="Phosphorus">
+        <br>
+        <label for="Uric">Uric acid:</label>
+        <input type='text' name="Uric" id="Uric">
+        <br>
+        <label for="Ck">CK:</label>
+        <input type='text' name="Ck" id="Ck">
+        <br>
+        <label for="Tchol">Total cholesterol:</label>
+        <input type='text' name="Tchol" id="Tchol">
+        <br>
+        <label for="Tg">Triglycerides:</label>
+        <input type='text' name="Tg" id="Tg">
+        <br>
+        <label for="Hba1c">HbA1c:</label>
+        <input type='text' name="Hba1c" id="Hba1c">
+        <br>
+        <label for="Hb">Haemoglobin:</label>
+        <input type='text' name="Hb" id="Hb">
+        <br>
+        <label for="Hct">Haematocrit:</label>
+        <input type='text' name="Hct" id="Hct">
+        <br>
+        <label for="Rbc">RBC:</label>
+        <input type='text' name="Rbc" id="Rbc">
+        <br>
+        <label for="Wbc">WBC:</label>
+        <input type='text' name="Wbc" id="Wbc">
+        <br>
+        <label for="Platelets">Platelets:</label>
+        <input type='text' name="Platelets" id="Platelets">
+        <br>
+        <label for="Anc">Abs neutrophil count:</label>
+        <input type='text' name="Anc" id="Anc">
+        <br>
+        <label for="Abslym">Abs lymphocytes:</label>
+        <input type='text' name="Abslym" id="Abslym">
+        <br>
+        <label for="Absmon">Abs monocytes:</label>
+        <input type='text' name="Absmon" id="Absmon">
+        <br>
+        <label for="Absbas">Abs basophils:</label>
+        <input type='text' name="Absbas" id="Absbas">
+        <br>
+        <label for="Abseos">Abs eosinophils:</label>
+        <input type='text' name="Abseos" id="Abseos">
+        <br>
+        <label for="Perlym">% lymphocytes:</label>
+        <input type='text' name="Perlym" id="Perlym">
+        <br>
+        <label for="Permon">% monocytes:</label>
+        <input type='text' name="Permon" id="Permon">
+        <br>
+        <label for="Perbas">% basophils:</label>
+        <input type='text' name="Perbas" id="Perbas">
+        <br>
+        <label for="Pereos">% eosinophils:</label>
+        <input type='text' name="Pereos" id="Pereos">
+        <br>
+        <label for="Alsfrsr">Revised Amyotrophic Lateral Sclerosis Functional Rating Scale (ALSFS-R):</label>
+        <input type='text' name="Alsfrsr" id="Alsfrsr">
+        <br>
+        <label for="Alsfrsrslp">ALSFS-R slope:</label>
+        <input type='text' name="Alsfrsrslp" id="Alsfrsrslp">
+        <br>
+        <label for="Advtotal">Total adverse events:</label>
+        <input type='text' name="Advtotal" id="Advtotal">
+        <br>
+        <label for="Advres">Respiratory adverse events:</label>
+        <input type='text' name="Advres" id="Advres">
+        <br>
+        <label for="Advnem">Neurological adverse events:</label>
+        <input type='text' name="Advnem" id="Advnem">
+        <br>
+        <label for="Advpsy">Psychiatric adverse events:</label>
+        <input type='text' name="Advpsy" id="Advpsy">
+        <br>
+        <label for="Advmet">Metabolic adverse events:</label>
+        <input type='text' name="Advmet" id="Advmet">
+        <br>
+        <input type="submit" value="Submit"/>
+        <input type="reset" value="Reset" style="color: red;"/>
+    </form>
+{% endblock %}
